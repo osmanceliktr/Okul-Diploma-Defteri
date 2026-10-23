@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.*
+!.env.example
+data/
+*.log
+build/
+dist/
+*.xls
+*.xlsx
+*.pdf
+~$*.xls
+~$*.xlsx

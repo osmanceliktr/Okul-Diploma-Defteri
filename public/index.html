@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diploma Kayıt</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='4' y='2' width='16' height='20' rx='2' fill='%237a2e3b'/%3E%3Crect x='7' y='6' width='10' height='1.6' fill='%23fff' opacity='.9'/%3E%3Crect x='7' y='16' width='10' height='1.6' fill='%23fff' opacity='.9'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/style.css?v=1.6.0">
+<script>try{var t=localStorage.getItem('diploma-theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body>
+
+<div id="gate" class="gate" hidden>
+  <form id="loginForm" class="gate-card" autocomplete="off">
+    <div class="brand brand-lg">
+      <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><rect class="band" x="7" y="6" width="10" height="1.6"/><rect class="band" x="7" y="16" width="10" height="1.6"/></svg>
+      <div><div class="brand-name">Diploma Kayıt</div><div class="brand-sub">Okul arşivi</div></div>
+    </div>
+    <h1>Arşive giriş</h1>
+    <p class="muted">Bu bilgisayardaki ortak hesabın parolasını yazın.</p>
+    <label class="field"><span>Parola</span><input id="password" type="password" required autocomplete="current-password"></label>
+    <p id="loginError" class="form-error" role="alert"></p>
+    <button class="btn btn-primary btn-wide" type="submit"><svg class="ic"><use href="/icons.svg?v=1.2.0#i-lock"/></svg>Giriş yap</button>
+  </form>
+</div>
+
+<div class="shell" id="shell" hidden>
+  <aside class="side">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><rect class="band" x="7" y="6" width="10" height="1.6"/><rect class="band" x="7" y="16" width="10" height="1.6"/></svg>
+      <div><div class="brand-name">Diploma Kayıt</div><div class="brand-sub" id="brandSchool">Okul arşivi</div></div>
+    </div>
+    <nav class="nav" aria-label="Bölümler">
+      <a href="#/students" data-view="students"><svg class="ic"><use href="/icons.svg?v=1.2.0#i-users"/></svg>Mezunlar</a>
+      <a href="#/settings" data-view="settings"><svg class="ic"><use href="/icons.svg?v=1.2.0#i-building"/></svg>Okul bilgileri</a>
+      <a href="#/stats" data-view="stats"><svg class="ic"><use href="/icons.svg?v=1.2.0#i-dashboard"/></svg>İstatistikler</a>
+      <a href="#/history" data-view="history"><svg class="ic"><use href="/icons.svg?v=1.2.0#i-history"/></svg>Belge geçmişi</a>
+      <a href="#/import" data-view="import"><svg class="ic"><use href="/icons.svg?v=1.2.0#i-sheet"/></svg>Excel / PDF aktarımı</a>
+      <a href="#/guide" data-view="guide"><svg class="ic"><use href="/icons.svg?v=1.2.0#i-book"/></svg>Rehber ve hakkında</a>
+    </nav>
+    <div class="side-foot">
+      <button class="nav-btn" id="themeBtn" type="button"><svg class="ic"><use id="themeIcon" href="/icons.svg?v=1.2.0#i-moon"/></svg><span id="themeLabel">Koyu tema</span></button>
+      <div class="account"><span class="avatar">OA</span><div><div class="muted small" id="accountSchool">Kurum adı girilmedi</div></div><button class="icon-btn" id="logoutBtn" type="button" title="Çıkış yap" aria-label="Çıkış yap"><svg class="ic"><use href="/icons.svg?v=1.2.0#i-logout"/></svg></button></div>
+    </div>
+  </aside>
+
+  <main class="sheet">
+    <div class="canvas">
+
+      <section class="view" id="view-students" hidden>
+        <header class="title-row">
+          <div><h1>Mezunlar</h1><p class="subline" id="studentsSubline"></p></div>
+          <div class="title-actions">
+            <button class="btn btn-primary" id="newStudentBtn" type="button"><svg class="ic"><use href="/icons.svg?v=1.2.0#i-plus"/></svg>Yeni kayıt</button>
+          </div>
+        </header>
+        <div class="finder">
+          <form class="search search-hero" id="studentSearch" role="search"><svg class="ic"><use href="/icons.svg?v=1.2.0#i-search"/></svg><input type="search" placeholder="Ad soyad, kimlik no, diploma no veya baba adı yazın" aria-label="Mezun ara" autocomplete="off"><kbd class="kbd" aria-hidden="true">Ctrl K</kbd></form>
+          <select id="volumeFilter" class="select" aria-label="Cilt"><option value="">Tüm ciltler</option></select>
+        </div>
+        <div class="split">
+          <div class="card list-card">
+            <div id="studentList"></div>
+          </div>
+          <aside class="card detail-card" id="studentDetail"></aside>
+        </div>
+      </section>
+
+      <section class="view" id="view-stats" hidden>
+        <header class="title-row">
+          <div><h1>İstatistikler</h1><p class="subline" id="statsSubline">Arşiv yükleniyor…</p></div>
+        </header>
+        <div class="kpis" id="kpis"></div>
+        <div class="card">
+          <div class="card-head"><div><div class="card-title">Mezuniyet yılına göre kayıtlar</div><div class="card-sub">Her çubuk bir diploma yılı. Boş kalan yıllar için arşivde kayıt yoktur.</div></div><div class="card-meta" id="yearsMeta"></div></div>
+          <div class="chart chart-years" id="yearsChart"></div>
+        </div>
+        <div class="row row-2-1">
+          <div class="card">
+            <div class="card-head"><div><div class="card-title">Cilt rafı</div><div class="card-sub">Her çubuk bir cilt defteri; yüksekliği içindeki kayıt sayısı. Bir cilde tıklayınca mezunları açılır.</div></div><div class="card-meta" id="shelfMeta"></div></div>
+            <div class="chart" id="shelfChart"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><div class="card-title">Belge talebi, son 12 ay</div><div class="card-sub">Aylara göre düzenlenen diploma kayıt örneği sayısı.</div></div><div class="card-meta" id="monthsMeta"></div></div>
+            <div class="chart chart-months" id="monthsChart"></div>
+          </div>
+        </div>
+        <div class="row row-1-1">
+          <div class="card">
+            <div class="card-head"><div><div class="card-title">Eksik bilgiler</div><div class="card-sub">Belgede boş kalacak alanlar. Eski ciltlerde kimlik no ve doğum bilgisi defterde yoktur.</div></div></div>
+            <div id="missingList"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">Son belge işlemleri</div><a class="link" href="#/history">Tümü</a></div>
+            <div id="recentIssuances"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-import" hidden>
+        <header class="title-row">
+          <div><h1>Excel ve PDF aktarımı</h1><p class="subline">Eski kayıt defterinin Excel sayfalarını cilt cilt, e-Okul diploma defteri PDF'lerini bütün olarak arşive aktarın. Kayıtlar önce önizlenir, onaylamadan hiçbir şey yazılmaz.</p></div>
+        </header>
+        <div id="importStage"></div>
+      </section>
+
+      <section class="view" id="view-history" hidden>
+        <header class="title-row">
+          <div><h1>Belge geçmişi</h1><p class="subline" id="historySubline"></p></div>
+        </header>
+        <div class="tabs" role="tablist">
+          <button class="tab" role="tab" data-tab="issuances" aria-selected="true" type="button">Belge işlemleri</button>
+          <button class="tab" role="tab" data-tab="imports" aria-selected="false" type="button">Excel aktarımları</button>
+        </div>
+        <div class="card" id="historyTable"></div>
+      </section>
+
+      <section class="view" id="view-settings" hidden>
+        <header class="title-row">
+          <div><h1>Okul bilgileri</h1><p class="subline">Bu bilgiler diploma kayıt örneğinin başlığında ve imza alanında basılır.</p></div>
+        </header>
+        <form class="card form-card" id="settingsForm">
+          <div class="form-grid">
+            <label class="field"><span>Okul adı</span><input name="school_name" required></label>
+            <label class="field"><span>Kurum kodu</span><input name="institution_code"></label>
+            <label class="field field-wide"><span>Adres</span><input name="address"></label>
+            <label class="field"><span>İlçe</span><input name="district" placeholder="Belge başlığının altında basılır"></label>
+            <label class="field"><span>İl</span><input name="province"></label>
+            <label class="field field-wide"><span>Belgedeki okul ifadesi</span><input name="school_phrase" placeholder="Örn. Beş sınıflı … İlkokulundan (-ndan/-nden ile biter)"></label>
+            <label class="field"><span>Okul müdürü</span><input name="principal_name"></label>
+            <label class="field"><span>Müdürün unvanı</span><input name="principal_title" placeholder="Okul Müdürü"></label>
+            <label class="field"><span>Belgeyi düzenleyen</span><input name="administrator_name"></label>
+            <label class="field"><span>Düzenleyenin unvanı</span><input name="administrator_title"></label>
+          </div>
+          <div class="form-foot"><span class="muted small" id="settingsStamp"></span><button class="btn btn-primary" type="submit"><svg class="ic"><use href="/icons.svg?v=1.2.0#i-save"/></svg>Kaydet</button></div>
+        </form>
+      </section>
+
+      <section class="view" id="view-guide" hidden>
+        <header class="title-row">
+          <div><h1>Uygulama rehberi</h1><p class="subline">Bu programın ne işe yaradığını ve nasıl kullanıldığını adım adım anlatır.</p></div>
+        </header>
+
+        <div class="guide">
+          <section class="card guide-card">
+            <div class="card-head"><div><div class="card-title">Bu program ne işe yarar?</div></div></div>
+            <div class="guide-body">
+              <p>Okulumuzdan yıllar önce mezun olan öğrencilerin diploma bilgileri eskiden kalın defterlere elle yazılırdı. Bu defterlere <strong>cilt</strong> denir. Bir gün o öğrencilerden biri okula gelip "Diplomamı kaybettim, bana bir belge verir misiniz?" diyebilir.</p>
+              <p>Eskiden bu belgeyi hazırlamak için ciltler tek tek karıştırılır, doğru satır bulunmaya çalışılırdı. Bu program o defterlerdeki bütün bilgileri bilgisayarda saklar. Öğrencinin adını yazınca kaydı birkaç saniyede bulur ve müdürün imzalayacağı belgeyi hazır hâle getirir.</p>
+              <p>Kısacası program üç şey yapar: <strong>kayıtları saklar</strong>, <strong>kayıtları bulur</strong> ve <strong>belge basar</strong>.</p>
+            </div>
+          </section>
+
+          <section class="card guide-card">
+            <div class="card-head"><div><div class="card-title">Nasıl kullanılır?</div><div class="card-sub">Soldaki menüdeki bölümler aşağıda sırayla anlatılmıştır.</div></div></div>
+            <ol class="guide-steps">
+              <li>
+                <h2>Giriş yapın</h2>
+                <p>Program açılınca sizden bir parola ister. Bu parolayı okul idaresi belirler. Parolayı doğru yazıp <em>Giriş yap</em> düğmesine basın. İşiniz bitince sol alttaki çıkış düğmesiyle programı kilitleyin ki başkası kayıtlara bakamasın.</p>
+              </li>
+              <li>
+                <h2>Mezunlar: bir kaydı bulun</h2>
+                <p>Programın ana ekranıdır. Üstteki büyük arama kutusuna öğrencinin adını, soyadını, kimlik numarasını ya da diploma numarasını yazın. Yazdıkça liste kendiliğinden daralır. Baba adıyla da arayabilirsiniz; aynı isimden birkaç kişi varsa bu çok işe yarar. Listeden bir kişiye tıklayınca sağ tarafta o kişinin bütün bilgileri açılır.</p>
+                <p>Hangi ciltte olduğunu biliyorsanız arama kutusunun yanındaki <em>Tüm ciltler</em> listesinden o cildi seçin; yalnızca o cildin kayıtları görünür.</p>
+              </li>
+              <li>
+                <h2>Yeni kayıt ekleyin ya da düzeltin</h2>
+                <p>Defterde olup programda olmayan bir kişi için sağ üstteki <em>Yeni kayıt</em> düğmesine basın ve kutuları doldurun. Zorunlu olan tek şey ad ve soyaddır, gerisini bildiğiniz kadar yazın. Yanlış yazılmış bir bilgiyi düzeltmek için kaydı açın, kutuyu düzeltin ve <em>Kaydet</em> deyin. Bir kaydı silmek geri alınamaz; silmeden önce iki kez düşünün.</p>
+              </li>
+              <li>
+                <h2>Belge basın</h2>
+                <p>Kaydı açtıktan sonra <em>Belge düzenle</em> düğmesine basın. Açılan pencerede öğrencinin adresi, telefonu ve tarihler sorulur; çoğu kutu kayıttan kendiliğinden dolar. <em>PDF oluştur</em> deyince tek sayfalık bir belge hazırlanır. Sayfanın üst yarısı öğrencinin dilekçesidir, alt yarısı ise okulun resmi yazısıdır.</p>
+                <p>Belgeyi yazıcıdan çıkarın. Üst kısmı öğrenci imzalar, alt kısmı okul müdürü imzalayıp mühürler. Her basılan belge programda not edilir, böylece daha sonra kime ne zaman belge verildiği görülebilir.</p>
+              </li>
+              <li>
+                <h2>Excel / PDF aktarımı: eski defterleri içeri alın</h2>
+                <p>Eski kayıtlar Excel dosyasında ya da e-Okul'dan alınan PDF dosyasındaysa bu bölümden programa aktarılır. Dosyayı seçin, hangi sayfaların alınacağını işaretleyin ve önce <em>önizlemeye</em> bakın. Program size "Şu kadar kayıt bulundu, şöyle görünüyor" diye gösterir. Her şey doğruysa onaylayın. Onaylamadan hiçbir şey yazılmaz, bu yüzden korkmadan deneyebilirsiniz.</p>
+              </li>
+              <li>
+                <h2>Belge geçmişi</h2>
+                <p>Şimdiye kadar basılan bütün belgelerin listesidir. Kime, hangi gün belge verildiği burada görünür. Bir belge tekrar lazım olursa buradan bulup yeniden basabilirsiniz.</p>
+              </li>
+              <li>
+                <h2>İstatistikler</h2>
+                <p>Arşivde kaç kayıt olduğunu, hangi yıllarda kaç kişinin mezun olduğunu ve hangi cildin ne kadar dolu olduğunu grafiklerle gösterir. Eksik bilgisi olan kayıtların sayısı da burada görünür; boş zamanınızda bunları tamamlayabilirsiniz.</p>
+              </li>
+              <li>
+                <h2>Okul bilgileri</h2>
+                <p>Okulun adı, adresi, müdürün adı ve unvanı burada yazılıdır. Bu bilgiler her belgenin başlığına ve imza alanına basılır. Müdür değişirse yalnızca burayı güncellemeniz yeter; bütün yeni belgeler doğru adla çıkar.</p>
+              </li>
+            </ol>
+          </section>
+
+          <section class="card guide-card">
+            <div class="card-head"><div><div class="card-title">Dikkat edilecekler</div></div></div>
+            <ul class="guide-tips">
+              <li><strong>Bu bilgiler kişiseldir.</strong> Kayıtları yalnızca görevli kişiler görmeli. Ekranı açık bırakıp masadan ayrılmayın, parolayı kimseyle paylaşmayın.</li>
+              <li><strong>Yedek alın.</strong> Bütün kayıtlar programın yanındaki <code>data</code> klasöründe durur. Bu klasörü ara sıra bir harici diske kopyalayın; bilgisayar bozulursa kayıtlar kaybolmaz.</li>
+              <li><strong>Program yalnızca bu bilgisayarda çalışır.</strong> İnternete bağlanmaz, bilgileri hiçbir yere göndermez.</li>
+              <li><strong>Bir sorun olursa</strong> programı kapatıp yeniden açın. Sorun sürerse aşağıdaki adresten geliştiriciye yazın.</li>
+            </ul>
+          </section>
+
+          <section class="card guide-card about" id="about">
+            <div class="card-head"><div><div class="card-title">Hakkında</div><div class="card-sub">Diploma Kayıt · <span id="aboutVersion">Sürüm bilgisi alınamadı</span></div></div></div>
+            <div class="guide-body">
+              <p>Bu program <strong>Osman Çelik</strong> tarafından yapay zekâ desteğiyle geliştirildi. Okul arşivindeki diploma kayıtlarının bilgisayarda saklanması, aranması ve belge basılması için tasarlanmıştır.</p>
+              <dl class="about-list">
+                <div><dt>Geliştirici</dt><dd>Osman Çelik</dd></div>
+                <div><dt>E-posta</dt><dd><a href="mailto:osmanceliktr@gmail.com">osmanceliktr@gmail.com</a></dd></div>
+                <div><dt>Web</dt><dd><a href="https://osmancelik.tr" target="_blank" rel="noopener">osmancelik.tr<svg class="ic ic-sm"><use href="/icons.svg?v=1.2.0#i-external"/></svg></a></dd></div>
+              </dl>
+            </div>
+          </section>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<dialog id="issueDialog" class="dialog" aria-labelledby="issueDialogTitle">
+  <form id="issueForm" class="dialog-body" novalidate>
+    <div class="dialog-head"><h2 id="issueDialogTitle">Belge düzenle</h2><p class="muted small">Tek sayfada üstte öğrencinin dilekçesi, altta diploma kayıt örneği basılır; dilekçe bölümü öğrenciye imzalatılır. Kimlik, doğum, baba adı ve diploma bilgileri kayıttan alınır; burada düzeltilen adres, telefon, ilçe ve il kayda da işlenir.</p></div>
+    <div class="form-grid">
+      <label class="field field-wide"><span>Dilekçe sahibi</span><input name="applicantName" maxlength="120"></label>
+      <label class="field"><span>Diploma tarihi</span><input type="date" name="graduation" min="1900-01-01" max="2100-12-31"></label>
+      <label class="field"><span>Belge tarihi</span><input type="date" name="documentDate" min="1900-01-01" max="2100-12-31"></label>
+      <label class="field field-wide"><span>Adres</span><input name="address" maxlength="200"></label>
+      <label class="field"><span>Telefon</span><input name="phone" maxlength="30" inputmode="tel"></label>
+      <label class="field"><span>Yakınlık</span><select name="relation"><option value="oğlu/kızı">oğlu/kızı</option><option value="oğlu">oğlu</option><option value="kızı">kızı</option></select></label>
+      <label class="field"><span>İlçe</span><input name="district" maxlength="40"></label>
+      <label class="field"><span>İl</span><input name="province" maxlength="40"></label>
+      <label class="field field-wide"><span>Okul ifadesi (resmi yazıda)</span><input name="schoolPhrase" maxlength="160" placeholder="Beş sınıflı … İlkokulundan" value="Beş sınıflı"></label>
+    </div>
+    <div class="dialog-foot"><button class="btn" type="button" id="issueCancel">Vazgeç</button><button class="btn btn-primary" type="submit" id="issueSubmit"><svg class="ic"><use href="/icons.svg?v=1.2.0#i-file-text"/></svg>PDF oluştur</button></div>
+  </form>
+</dialog>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script src="/app.js?v=1.10.0"></script>
+</body>
+</html>

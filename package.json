@@ -1,0 +1,23 @@
+{
+  "name": "diploma-kayit",
+  "version": "1.2.0",
+  "private": true,
+  "description": "DİPLOMA kayıt ve belge üretim uygulaması",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "dev": "node --watch --env-file-if-exists=.env src/server.js",
+    "test": "node --test --test-isolation=none",
+    "desktop": "node desktop/main.js",
+    "build:desktop": "node desktop/build.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "optionalDependencies": {
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.12"
+  }
+}
